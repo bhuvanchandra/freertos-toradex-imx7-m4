@@ -55,8 +55,8 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
 /* Specify the memory areas */
 MEMORY
 {
-  m_interrupts          (RX)  : ORIGIN = 0x9ff00000, LENGTH = 0x00000240
-  m_text                (RX)  : ORIGIN = 0x9ff00240, LENGTH = 0x00007DC0
+  m_interrupts          (RX)  : ORIGIN = 0x8ff00000, LENGTH = 0x00000240
+  m_text                (RX)  : ORIGIN = 0x8ff00240, LENGTH = 0x000EFDC0
   m_data                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00008000
 }
 
