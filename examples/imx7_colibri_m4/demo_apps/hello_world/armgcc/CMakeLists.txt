@@ -144,4 +144,5 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -Xlinker -Map=${ProjectNa
 
 # BIN AND HEX
 ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Oihex ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.hex)
-ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Obinary ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.bin)
+# bin does not support sparse memory area, which our default linker file uses...
+#ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Obinary ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.bin)

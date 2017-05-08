@@ -55,9 +55,9 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
 /* Specify the memory areas */
 MEMORY
 {
-  m_interrupts          (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000240
-  m_text                (RX)  : ORIGIN = 0x1ff00000, LENGTH = 0x00080000
-  m_data                (RW)  : ORIGIN = 0x8ff80000, LENGTH = 0x00070000
+  m_interrupts          (RX)  : ORIGIN = 0x00910000, LENGTH = 0x00000240
+  m_text                (RX)  : ORIGIN = 0x00910240, LENGTH = 0x0000fdc0
+  m_data                (RW)  : ORIGIN = 0x20220000, LENGTH = 0x00020000 /* EPDC */
 }
 
 INCLUDE "MCIMX7D_M4.ld"
