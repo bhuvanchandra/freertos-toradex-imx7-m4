@@ -1,3 +1,7 @@
 #!/bin/sh
-rm -rf debug release CMakeFiles
-rm -rf Makefile cmake_install.cmake CMakeCache.txt
+cd debug
+rm -rf Makefile cmake_install.cmake CMakeCache.txt CMakeFiles *.elf *.bin *.map *.hex
+cd ..
+cd release
+rm -rf Makefile cmake_install.cmake CMakeCache.txt CMakeFiles *.elf *.bin *.map *.hex
+cd ..

@@ -154,8 +154,7 @@ TARGET_LINK_LIBRARIES(hello_world nosys)
 TARGET_LINK_LIBRARIES(hello_world -Wl,--end-group)
 
 # MAP FILE
-SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG}  -Xlinker -Map=debug/hello_world.map")
-SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}  -Xlinker -Map=release/hello_world.map")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -Xlinker -Map=hello_world.map")
 
 # BIN AND HEX
 ADD_CUSTOM_COMMAND(TARGET hello_world POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Oihex ${EXECUTABLE_OUTPUT_PATH}/hello_world.elf ${EXECUTABLE_OUTPUT_PATH}/hello_world.hex)
