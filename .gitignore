@@ -6,3 +6,5 @@ cmake_install.cmake
 *.elf
 *.hex
 *.map
+*.cproject
+*.project
