@@ -1,5 +1,7 @@
 #!/bin/sh
-cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug  .
-make -j4
-cmake -DCMAKE_TOOLCHAIN_FILE="../../../../../../../tools/cmake_toolchain_files/armgcc.cmake" -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Release  .
-make -j4
+cd debug/
+./build_debug.sh
+cd ..
+cd release/
+./build_release.sh
+cd ..

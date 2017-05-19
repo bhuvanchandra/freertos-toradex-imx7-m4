@@ -1,3 +1,8 @@
+INCLUDE(CMakeForceCompiler)
+
+SET(ProjectName ecspi_interrupt_master)
+PROJECT(${ProjectName})
+
 # CROSS COMPILER SETTING
 SET(CMAKE_SYSTEM_NAME Generic)
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
@@ -22,7 +27,7 @@ SET(ProjDirPath ${CMAKE_CURRENT_SOURCE_DIR})
 SET(BspRootDirPath ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../..)
 
 # RELEASE/DEBUG LINK FILE
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T${BspRootDirPath}/platform/devices/MCIMX7D/linker/gcc/MCIMX7D_M4_tcm.ld  -static")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T MCIMX7D_M4_tcm.ld -static -L ${BspRootDirPath}/platform/devices/MCIMX7D/linker/gcc/")
 
 # DEFAULT ASM FLAGS
 SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
@@ -31,7 +36,7 @@ SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -MMD  -MP  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
 
 # DEFAULT LD FLAGS
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  --specs=nano.specs  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mthumb  -mapcs  -Xlinker --gc-sections  -Xlinker -static  -Xlinker -z  -Xlinker muldefs")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mcpu=cortex-m4 -mfloat-abi=hard  -mfpu=fpv4-sp-d16  --specs=nano.specs  -Wall  -fno-common -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mthumb -mapcs  -Xlinker --gc-sections  -Xlinker -static  -Xlinker -z -z max-page-size=4096 -Xlinker muldefs")
 
 # DEBUG ASM FLAGS
 SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG} -g")
@@ -49,27 +54,22 @@ SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Os")
 SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG}  -D__DEBUG")
 
 # C MACRO
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCPU_MCIMX7D_M4")
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}  -D__DEBUG")
 SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}  -D__NDEBUG")
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -DCPU_MCIMX7D_M4")
-
 # INCLUDE_DIRECTORIES
-IF(CMAKE_BUILD_TYPE MATCHES Debug)
-ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
-ENDIF()
-
 INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../..)
+INCLUDE_DIRECTORIES(${ProjDirPath}/..)
 INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/CMSIS/Include)
 INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/devices)
 INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/devices/MCIMX7D/include)
 INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/devices/MCIMX7D/startup)
 INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/drivers/inc)
 INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/utilities/inc)
-INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../..)
 
 # ADD_EXECUTABLE
-ADD_EXECUTABLE(ecspi_interrupt_master_example
+ADD_EXECUTABLE(${ProjectName}
     "${BspRootDirPath}/platform/devices/MCIMX7D/startup/gcc/startup_MCIMX7D_M4.S"
     "${BspRootDirPath}/platform/utilities/src/debug_console_imx.c"
     "${BspRootDirPath}/platform/utilities/inc/debug_console_imx.h"
@@ -101,24 +101,25 @@ ADD_EXECUTABLE(ecspi_interrupt_master_example
     "${BspRootDirPath}/platform/drivers/src/uart_imx.c"
     "${BspRootDirPath}/platform/drivers/inc/uart_imx.h"
 )
-SET_TARGET_PROPERTIES(ecspi_interrupt_master_example PROPERTIES OUTPUT_NAME "ecspi_interrupt_master_example.elf")
+SET_TARGET_PROPERTIES(${ProjectName} PROPERTIES OUTPUT_NAME "${ProjectName}.elf")
 
-TARGET_LINK_LIBRARIES(ecspi_interrupt_master_example -Wl,--start-group)
+TARGET_LINK_LIBRARIES(${ProjectName} -Wl,--start-group)
 # LIBRARIES
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
 ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
 ENDIF()
 
 # SYSTEM LIBRARIES
-TARGET_LINK_LIBRARIES(ecspi_interrupt_master_example m)
-TARGET_LINK_LIBRARIES(ecspi_interrupt_master_example c)
-TARGET_LINK_LIBRARIES(ecspi_interrupt_master_example gcc)
-TARGET_LINK_LIBRARIES(ecspi_interrupt_master_example nosys)
-TARGET_LINK_LIBRARIES(ecspi_interrupt_master_example -Wl,--end-group)
+TARGET_LINK_LIBRARIES(${ProjectName} m)
+TARGET_LINK_LIBRARIES(${ProjectName} c)
+TARGET_LINK_LIBRARIES(${ProjectName} gcc)
+TARGET_LINK_LIBRARIES(${ProjectName} nosys)
+TARGET_LINK_LIBRARIES(${ProjectName} -Wl,--end-group)
 
 # MAP FILE
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -Xlinker -Map=${EXECUTABLE_OUTPUT_PATH}/ecspi_interrupt_master_example.map")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -Xlinker -Map=${ProjectName}.map")
 
 # BIN AND HEX
-ADD_CUSTOM_COMMAND(TARGET ecspi_interrupt_master_example POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Oihex ${EXECUTABLE_OUTPUT_PATH}/ecspi_interrupt_master_example.elf ${EXECUTABLE_OUTPUT_PATH}/ecspi_interrupt_master_example.hex)
-ADD_CUSTOM_COMMAND(TARGET ecspi_interrupt_master_example POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Obinary ${EXECUTABLE_OUTPUT_PATH}/ecspi_interrupt_master_example.elf ${EXECUTABLE_OUTPUT_PATH}/ecspi_interrupt_master_example.bin)
+ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Oihex ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.hex)
+# bin does not support sparse memory area, which our default linker file uses...
+#ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Obinary ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.bin)
