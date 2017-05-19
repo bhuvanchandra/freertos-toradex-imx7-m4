@@ -31,43 +31,15 @@
 #include "board.h"
 #include "pin_mux.h"
 
-void RDC_memory_init(void)
-{
-    uint32_t start, end;
-#if defined(__CC_ARM)
-    extern uint32_t Image$$VECTOR_ROM$$Base[];
-    extern uint32_t Image$$ER_m_text$$Limit[];
-    extern uint32_t Image$$RW_m_data$$Base[];
-    extern uint32_t Image$$RW_m_data$$Limit[];
-
-    start = (uint32_t)Image$$VECTOR_ROM$$Base & 0xFFFFFF80;
-    end = (uint32_t)(Image$$ER_m_text$$Limit + (Image$$RW_m_data$$Limit - Image$$RW_m_data$$Base));
-    end = (end + 0x7F) & 0xFFFFFF80;
-#else
-    extern uint32_t __FLASH_START[];
-    extern uint32_t __FLASH_END[];
-
-    start = (uint32_t)__FLASH_START & 0xFFFFFF80;
-    end   = ((uint32_t)__FLASH_END + 0x7F) & 0xFFFFFF80;
-#endif
-
-    /* Grant all domains read/write access because in DSM mode Linux need to
-     * save/restore OCRAM content */
-    RDC_SetMrAccess(RDC, rdcMrOcram, start, end, 0xFF, true, false);
-}
-
 void hardware_init(void)
 {
     /* Board specific RDC settings */
     BOARD_RdcInit();
 
-    /* Bound part of the OCRAM Memory to M4 Core */
-    RDC_memory_init();
-
     /* Board specific clock settings */
     BOARD_ClockInit();
 
-    /* Initialize debug uart */
+    /* initialize debug uart */
     dbg_uart_init();
 }
 
