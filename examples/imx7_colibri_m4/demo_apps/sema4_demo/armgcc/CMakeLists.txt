@@ -1,5 +1,8 @@
 INCLUDE(CMakeForceCompiler)
 
+SET(ProjectName sema4_demo)
+PROJECT(${ProjectName})
+
 # CROSS COMPILER SETTING
 SET(CMAKE_SYSTEM_NAME Generic)
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
@@ -17,123 +20,106 @@ SET(CMAKE_STATIC_LIBRARY_SUFFIX)
 SET(CMAKE_EXECUTABLE_LIBRARY_PREFIX)
 SET(CMAKE_EXECUTABLE_LIBRARY_SUFFIX)
 
- 
+SET(CMAKE_SKIP_INSTALL_RULES TRUE)
+
 # CURRENT DIRECTORY
 SET(ProjDirPath ${CMAKE_CURRENT_SOURCE_DIR})
+SET(BspRootDirPath ${CMAKE_CURRENT_SOURCE_DIR}/../../../../..)
 
-# DEBUG LINK FILE
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -T${ProjDirPath}/../../../../../platform/devices/MCIMX7D/linker/gcc/MCIMX7D_M4_tcm.ld  -static")
+# RELEASE/DEBUG LINK FILE
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T MCIMX7D_M4_tcm.ld -static -L ${BspRootDirPath}/platform/devices/MCIMX7D/linker/gcc/")
 
-# RELEASE LINK FILE
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -T${ProjDirPath}/../../../../../platform/devices/MCIMX7D/linker/gcc/MCIMX7D_M4_tcm.ld  -static")
+# DEFAULT ASM FLAGS
+SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
+
+# DEFAULT C FLAGS
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -MMD  -MP  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
+
+# DEFAULT LD FLAGS
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mcpu=cortex-m4 -mfloat-abi=hard  -mfpu=fpv4-sp-d16  --specs=nano.specs  -Wall  -fno-common -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mthumb -mapcs  -Xlinker --gc-sections  -Xlinker -static  -Xlinker -z -z max-page-size=4096 -Xlinker muldefs")
 
 # DEBUG ASM FLAGS
-SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG} -g  -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
+SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG} -g")
 
 # DEBUG C FLAGS
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g  -O0  -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -MMD  -MP  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
+SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0")
 
 # DEBUG LD FLAGS
-SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -g  -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  --specs=nano.specs  -lm  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -Os  -mthumb  -mapcs  -Xlinker --gc-sections  -Xlinker -static  -Xlinker -z  -Xlinker muldefs")
-
-# RELEASE ASM FLAGS
-SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
+SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -g")
 
 # RELEASE C FLAGS
-SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Os  -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  -mthumb  -MMD  -MP  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -mapcs  -std=gnu99")
-
-# RELEASE LD FLAGS
-SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -mcpu=cortex-m4  -mfloat-abi=hard  -mfpu=fpv4-sp-d16  --specs=nano.specs  -lm  -Wall  -fno-common  -ffunction-sections  -fdata-sections  -ffreestanding  -fno-builtin  -Os  -mthumb  -mapcs  -Xlinker --gc-sections  -Xlinker -static  -Xlinker -z  -Xlinker muldefs")
+SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Os")
 
 # ASM MACRO
 SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG}  -D__DEBUG")
 
 # C MACRO
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCPU_MCIMX7D_M4")
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}  -D__DEBUG")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}  -DCPU_MCIMX7D_M4")
 SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}  -D__NDEBUG")
-SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}  -DCPU_MCIMX7D_M4")
-
-# CXX MACRO
 
 # INCLUDE_DIRECTORIES
-IF(CMAKE_BUILD_TYPE MATCHES Debug)
     INCLUDE_DIRECTORIES(${ProjDirPath}/../../..)
     INCLUDE_DIRECTORIES(${ProjDirPath}/..)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/CMSIS/Include)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/devices)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/devices/MCIMX7D/include)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/devices/MCIMX7D/startup)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/drivers/inc)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/utilities/inc)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/CMSIS/Include)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/devices)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/devices/MCIMX7D/include)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/devices/MCIMX7D/startup)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/drivers/inc)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/rtos/FreeRTOS/Source/include)
+    INCLUDE_DIRECTORIES(${BspRootDirPath}/platform/utilities/inc)
     INCLUDE_DIRECTORIES(${ProjDirPath}/../../..)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/..)
-ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../..)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/..)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/CMSIS/Include)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/devices)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/devices/MCIMX7D/include)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/devices/MCIMX7D/startup)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/drivers/inc)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../../../../platform/utilities/inc)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/../../..)
-    INCLUDE_DIRECTORIES(${ProjDirPath}/..)
-ENDIF()
 
 # ADD_EXECUTABLE
-ADD_EXECUTABLE(sema4_demo 
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
-    "${ProjDirPath}/../../../../../platform/devices/MCIMX7D/startup/gcc/startup_MCIMX7D_M4.S"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/portable/MemMang/heap_2.c"
+ADD_EXECUTABLE(${ProjectName}
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+    "${BspRootDirPath}/platform/devices/MCIMX7D/startup/gcc/startup_MCIMX7D_M4.S"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/portable/MemMang/heap_2.c"
     "${ProjDirPath}/../FreeRTOSConfig.h"
     "${ProjDirPath}/../main.c"
     "${ProjDirPath}/../sema4_mutex.c"
     "${ProjDirPath}/../sema4_mutex.h"
-    "${ProjDirPath}/../../../../../platform/drivers/src/sema4.c"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/sema4.h"
-    "${ProjDirPath}/../../../../../platform/drivers/src/uart_imx.c"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/uart_imx.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/croutine.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/event_groups.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/FreeRTOS.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/list.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/mpu_wrappers.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/portable.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/projdefs.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/queue.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/semphr.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/StackMacros.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/task.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/include/timers.h"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/ccm_analog_imx7d.h"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/ccm_imx7d.h"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/lmem.h"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/rdc.h"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/rdc_defs_imx7d.h"
-    "${ProjDirPath}/../../../../../platform/drivers/inc/wdog_imx.h"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/croutine.c"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/event_groups.c"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/list.c"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/queue.c"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/tasks.c"
-    "${ProjDirPath}/../../../../../rtos/FreeRTOS/Source/timers.c"
-    "${ProjDirPath}/../../../../../platform/drivers/src/ccm_analog_imx7d.c"
-    "${ProjDirPath}/../../../../../platform/drivers/src/ccm_imx7d.c"
-    "${ProjDirPath}/../../../../../platform/drivers/src/lmem.c"
-    "${ProjDirPath}/../../../../../platform/drivers/src/rdc.c"
-    "${ProjDirPath}/../../../../../platform/drivers/src/wdog_imx.c"
-    "${ProjDirPath}/../../../../../platform/utilities/src/debug_console_imx.c"
-    "${ProjDirPath}/../../../../../platform/utilities/inc/debug_console_imx.h"
-    "${ProjDirPath}/../../../../../platform/utilities/src/print_scan.c"
-    "${ProjDirPath}/../../../../../platform/utilities/src/print_scan.h"
-    "${ProjDirPath}/../../../../../platform/devices/MCIMX7D/startup/system_MCIMX7D_M4.c"
-    "${ProjDirPath}/../../../../../platform/devices/MCIMX7D/startup/system_MCIMX7D_M4.h"
+    "${BspRootDirPath}/platform/drivers/src/sema4.c"
+    "${BspRootDirPath}/platform/drivers/inc/sema4.h"
+    "${BspRootDirPath}/platform/drivers/src/uart_imx.c"
+    "${BspRootDirPath}/platform/drivers/inc/uart_imx.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/croutine.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/event_groups.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/FreeRTOS.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/list.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/mpu_wrappers.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/portable.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/projdefs.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/queue.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/semphr.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/StackMacros.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/task.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/include/timers.h"
+    "${BspRootDirPath}/platform/drivers/inc/ccm_analog_imx7d.h"
+    "${BspRootDirPath}/platform/drivers/inc/ccm_imx7d.h"
+    "${BspRootDirPath}/platform/drivers/inc/lmem.h"
+    "${BspRootDirPath}/platform/drivers/inc/rdc.h"
+    "${BspRootDirPath}/platform/drivers/inc/rdc_defs_imx7d.h"
+    "${BspRootDirPath}/platform/drivers/inc/wdog_imx.h"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/croutine.c"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/event_groups.c"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/list.c"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/queue.c"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/tasks.c"
+    "${BspRootDirPath}/rtos/FreeRTOS/Source/timers.c"
+    "${BspRootDirPath}/platform/drivers/src/ccm_analog_imx7d.c"
+    "${BspRootDirPath}/platform/drivers/src/ccm_imx7d.c"
+    "${BspRootDirPath}/platform/drivers/src/lmem.c"
+    "${BspRootDirPath}/platform/drivers/src/rdc.c"
+    "${BspRootDirPath}/platform/drivers/src/wdog_imx.c"
+    "${BspRootDirPath}/platform/utilities/src/debug_console_imx.c"
+    "${BspRootDirPath}/platform/utilities/inc/debug_console_imx.h"
+    "${BspRootDirPath}/platform/utilities/src/print_scan.c"
+    "${BspRootDirPath}/platform/utilities/src/print_scan.h"
+    "${BspRootDirPath}/platform/devices/MCIMX7D/startup/system_MCIMX7D_M4.c"
+    "${BspRootDirPath}/platform/devices/MCIMX7D/startup/system_MCIMX7D_M4.h"
     "${ProjDirPath}/../../../pin_mux.c"
     "${ProjDirPath}/../../../pin_mux.h"
     "${ProjDirPath}/../../../board.c"
@@ -142,25 +128,25 @@ ADD_EXECUTABLE(sema4_demo
     "${ProjDirPath}/../../../clock_freq.h"
     "${ProjDirPath}/../hardware_init.c"
 )
-SET_TARGET_PROPERTIES(sema4_demo PROPERTIES OUTPUT_NAME "sema4_demo.elf")
+SET_TARGET_PROPERTIES(${ProjectName} PROPERTIES OUTPUT_NAME "${ProjectName}.elf")
 
-TARGET_LINK_LIBRARIES(sema4_demo -Wl,--start-group)
+TARGET_LINK_LIBRARIES(${ProjectName} -Wl,--start-group)
 # LIBRARIES
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
 ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
 ENDIF()
 
 # SYSTEM LIBRARIES
-TARGET_LINK_LIBRARIES(sema4_demo m)
-TARGET_LINK_LIBRARIES(sema4_demo c)
-TARGET_LINK_LIBRARIES(sema4_demo gcc)
-TARGET_LINK_LIBRARIES(sema4_demo nosys)
-TARGET_LINK_LIBRARIES(sema4_demo -Wl,--end-group)
+TARGET_LINK_LIBRARIES(${ProjectName} m)
+TARGET_LINK_LIBRARIES(${ProjectName} c)
+TARGET_LINK_LIBRARIES(${ProjectName} gcc)
+TARGET_LINK_LIBRARIES(${ProjectName} nosys)
+TARGET_LINK_LIBRARIES(${ProjectName} -Wl,--end-group)
 
 # MAP FILE
-SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG}  -Xlinker -Map=debug/sema4_demo.map")
-SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}  -Xlinker -Map=release/sema4_demo.map")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -Xlinker -Map=${ProjectName}.map")
 
 # BIN AND HEX
-ADD_CUSTOM_COMMAND(TARGET sema4_demo POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Oihex ${EXECUTABLE_OUTPUT_PATH}/sema4_demo.elf ${EXECUTABLE_OUTPUT_PATH}/sema4_demo.hex)
-ADD_CUSTOM_COMMAND(TARGET sema4_demo POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Obinary ${EXECUTABLE_OUTPUT_PATH}/sema4_demo.elf ${EXECUTABLE_OUTPUT_PATH}/sema4_demo.bin)
+ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Oihex ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.hex)
+# bin does not support sparse memory area, which our default linker file uses...
+#ADD_CUSTOM_COMMAND(TARGET ${ProjectName} POST_BUILD COMMAND ${CMAKE_OBJCOPY} -Obinary ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.elf ${EXECUTABLE_OUTPUT_PATH}/${ProjectName}.bin)
