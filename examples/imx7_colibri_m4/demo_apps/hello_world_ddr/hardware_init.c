@@ -31,10 +31,43 @@
 #include "board.h"
 #include "pin_mux.h"
 
+void RDC_memory_init(void)
+{
+    uint32_t start, end;
+#if defined(__CC_ARM)
+    extern uint32_t Image$$VECTOR_ROM$$Base[];
+    extern uint32_t Image$$ER_m_text$$Limit[];
+    extern uint32_t Image$$RW_m_data$$Base[];
+    extern uint32_t Image$$RW_m_data$$Limit[];
+
+    start = (uint32_t)Image$$VECTOR_ROM$$Base & 0xFFFFF000;
+    end = (uint32_t)(Image$$ER_m_text$$Limit + (Image$$RW_m_data$$Limit - Image$$RW_m_data$$Base));
+    end = (end + 0xFFF) & 0xFFFFF000;
+    RDC_SetMrAccess(RDC, rdcMrMmdc, start, end, (3 << (BOARD_DOMAIN_ID * 2)), true, false);
+#else
+    extern uint32_t __MMDC_CODE_START;
+    extern uint32_t __MMDC_CODE_END;
+    extern uint32_t __MMDC_DATA_START;
+    extern uint32_t __MMDC_DATA_END;
+
+    start = round_down(__MMDC_CODE_START, RDC_REGION_RES_MMDC);
+    end   = round_up(__MMDC_CODE_END, RDC_REGION_RES_MMDC);
+    RDC_SetMrAccess(RDC, rdcMrMmdc, start, end, (3 << (BOARD_DOMAIN_ID * 2)), true, false);
+
+    start = round_down(__MMDC_DATA_START, RDC_REGION_RES_MMDC);
+    end   = round_up(__MMDC_DATA_END, RDC_REGION_RES_MMDC);
+    RDC_SetMrAccess(RDC, rdcMrMmdc + 1, start, end, (3 << (BOARD_DOMAIN_ID * 2)), true, false);
+#endif
+
+}
+
 void hardware_init(void)
 {
     /* Board specific RDC settings */
     BOARD_RdcInit();
+
+    /* Bound part of the DDR Memory to M4 Core */
+    RDC_memory_init();
 
     /* Board specific clock settings */
     BOARD_ClockInit();
